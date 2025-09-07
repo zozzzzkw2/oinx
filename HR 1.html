@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم ONIX - الموارد البشرية</title>
+    <style>
+        :root {
+            --primary-bg: #000;
+            --primary-text: #fff;
+            --secondary-text: #ccc;
+            --accent-color: #e50914;
+            --card-bg: #1a1a1a;
+            --input-bg: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* نموذج الدخول */
+        .login-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-form {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: right;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--input-bg);
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: var(--primary-text);
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #ff0a16;
+        }
+        
+        /* لوحة التحكم */
+        .dashboard {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background-color: var(--card-bg);
+            color: var(--primary-text);
+            border: 1px solid #444;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .search-box {
+            margin-bottom: 2rem;
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .application-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-specialization {
+            display: inline-block;
+            background-color: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .app-email {
+            color: var(--secondary-text);
+            margin-bottom: 1rem;
+        }
+        
+        .download-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .error {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <section id="loginSection" class="login-section">
+        <div class="container">
+            <form id="loginForm" class="login-form">
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--accent-color);">دخول الموارد البشرية</h2>
+                
+                <div class="form-group">
+                    <label for="adminKey">مفتاح المدير</label>
+                    <input type="password" id="adminKey" name="adminKey" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn">دخول</button>
+                
+                <div id="loginMessage" class="message"></div>
+            </form>
+        </div>
+    </section>
+    
+    <section id="dashboardSection" class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>لوحة تحكم الموارد البشرية</h2>
+                <button id="logoutBtn" class="btn" style="width: auto;">تسجيل خروج</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalApplications">0</div>
+                    <div>إجمالي المتقدمين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="webDevelopers">0</div>
+                    <div>تطوير مواقع</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="designers">0</div>
+                    <div>تصميم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="networkSpecialists">0</div>
+                    <div>شبكات</div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="تطوير مواقع">💻 تطوير مواقع</button>
+                <button class="filter-btn" data-filter="تصميم">🎨 تصميم</button>
+                <button class="filter-btn" data-filter="شبكات">🌐 شبكات</button>
+                <button class="filter-btn" data-filter="تسويق رقمي">📢 تسويق رقمي</button>
+                <button class="filter-btn" data-filter="أخرى">🔷 أخرى</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" class="form-control" placeholder="بحث باسم المتقدم...">
+            </div>
+            
+            <div id="applicationsContainer" class="applications-grid">
+                <!-- سيتم ملء هذا القسم بالبيانات عبر JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const adminKey = document.getElementById('adminKey').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            if (adminKey === 'ONIX_ADMIN_2023') { // يجب تغيير هذا المفتاح في البيئة الإنتاجية
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashboardSection').style.display = 'block';
+                loadApplications();
+            } else {
+                showLoginMessage('مفتاح الدخول غير صحيح', 'error');
+            }
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('adminKey').value = '';
+        });
+        
+        // إضافة أحداث لأزرار التصفية
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                loadApplications(filter);
+            });
+        });
+        
+        // إضافة حدث للبحث
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchValue = this.value;
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            loadApplications(activeFilter, searchValue);
+        });
+        
+        function loadApplications(filter = 'all', search = '') {
+            const formData = new FormData();
+            formData.append('admin_key', 'ONIX_ADMIN_2023');
+            if (filter) formData.append('filter', filter);
+            if (search) formData.append('search', search);
+            
+            fetch('process.php?action=get_applications', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayApplications(data.data);
+                    updateStats(data.data);
+                } else {
+                    alert('خطأ في جلب البيانات: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('حدث خطأ في الاتصال: ' + error);
+            });
+        }
+        
+        function displayApplications(applications) {
+            const container = document.getElementById('applicationsContainer');
+            container.innerHTML = '';
+            
+            if (applications.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">لا توجد طلبات متاحة</p>';
+                return;
+            }
+            
+            applications.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'application-card';
+                
+                // تحديد أيقونة التخصص
+                let specializationIcon = '🔷';
+                if (app.specialization === 'تطوير مواقع') specializationIcon = '💻';
+                else if (app.specialization === 'تصميم') specializationIcon = '🎨';
+                else if (app.specialization === 'شبكات') specializationIcon = '🌐';
+                else if (app.specialization === 'تسويق رقمي') specializationIcon = '📢';
+                
+                card.innerHTML = `
+                    <div class="app-name">${app.full_name}</div>
+                    <div class="app-specialization">${specializationIcon} ${app.specialization}</div>
+                    <div class="app-email">${app.email}</div>
+                    <div>تاريخ التقديم: ${new Date(app.submission_date).toLocaleDateString('ar-SA')}</div>
+                    <a href="uploads/${app.cv_filename}" download class="download-btn">تحميل السيرة الذاتية</a>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function updateStats(applications) {
+            document.getElementById('totalApplications').textContent = applications.length;
+            document.getElementById('webDevelopers').textContent = applications.filter(app => app.specialization === 'تطوير مواقع').length;
+            document.getElementById('designers').textContent = applications.filter(app => app.specialization === 'تصميم').length;
+            document.getElementById('networkSpecialists').textContent = applications.filter(app => app.specialization === 'شبكات').length;
+        }
+        
+        function showLoginMessage(message, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
